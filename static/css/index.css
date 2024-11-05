@@ -1,0 +1,176 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    width: 90%;
+    max-width: 1200px;
+  }
+
+  h1 {
+    color: #ffffff;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .upload-area {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px dashed #ffffff;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .upload-area:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .upload-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .upload-btn:hover {
+    background-color: #45a049;
+  }
+
+  .preview-area {
+    display: flex;
+    margin-top: 2rem;
+    gap: 2rem;
+  }
+
+  .image-preview, .text-preview {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 1rem;
+    height: 300px;
+    overflow-y: auto;
+  }
+
+  .image-preview img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .submit-btn, .enhance-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn {
+    background-color: #008CBA;
+    color: white;
+  }
+
+  .submit-btn:hover {
+    background-color: #007B9A;
+  }
+
+  .enhance-btn {
+    background-color: #f44336;
+    color: white;
+  }
+
+  .enhance-btn:hover {
+    background-color: #d32f2f;
+  }
+
+  .glassmorphism {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .glassmorphism.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ffffff;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .slider-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .slider-btn {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .slider-btn:hover {
+    background-color: #007B9A;
+  }
+
+  .slider-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }

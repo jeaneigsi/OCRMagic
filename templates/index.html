@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Magic: Extract Text from Images</title>
+    <link rel="stylesheet" href="../static/css/index.css">
+    <style>
+        .ocr-method-btn {
+            margin: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .ocr-method-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        /* Style for the tutorial popup */
+        .tutorial-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .tutorial-popup button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OCR Magic</h1>
+        <button onclick="showTutorial()">Show Tutorial</button>
+        <div class="ocr-method-selector">
+            <button class="ocr-method-btn" id="suryaBtn">Surya</button>
+            <button class="ocr-method-btn" id="paddleBtn">Paddle</button>
+        </div>
+        <div class="url-prefix">
+            <label for="urlPrefixInput">Enter URL Prefix:</label>
+            <input type="text" id="urlPrefixInput" placeholder="http://localhost:8000" />
+        </div>
+        <div class="token-auth">
+            <label for="authTokenInput">Enter Bearer Token:</label>
+            <input type="text" id="authTokenInput" placeholder="Bearer Token" />
+        </div>
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Upload Images</button>
+            <p>or drag and drop images here</p>
+        </div>
+        <div class="preview-area">
+            <div class="image-preview" id="imagePreview"></div>
+            <div class="text-preview" id="textPreview"></div>
+        </div>
+        <div class="slider-controls">
+            <button class="slider-btn" id="prevBtn" disabled>&lt;</button>
+            <button class="slider-btn" id="nextBtn" disabled>&gt;</button>
+        </div>
+        <div class="controls">
+            <button class="submit-btn" id="submitBtn">Extract Text</button>
+            <button class="enhance-btn" id="enhanceBtn">Enhance Results</button>
+        </div>
+    </div>
+    <div class="glassmorphism" id="glassmorphism">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Tutorial Popup -->
+    <div class="tutorial-popup" id="tutorialPopup" style="display:none;">
+        <h2>Tutorial</h2>
+        <p>1. Enter the URL prefix (don't add "/" at the end ) and Bearer token in the appropriate fields.</p>
+        <p>2. Click "Upload Images" to select images or drag and drop images into the designated area.</p>
+        <p>3. Select the OCR method you want to use (Surya for quality or Paddle for speed).</p>
+        <p>4. Click "Extract Text" to extract text from the uploaded image.</p>
+        <p>5. View the extracted text below the image preview.</p>
+        <button onclick="closeTutorial()">Close</button>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const textPreview = document.getElementById('textPreview');
+        const submitBtn = document.getElementById('submitBtn');
+        const enhanceBtn = document.getElementById('enhanceBtn');
+        const glassmorphism = document.getElementById('glassmorphism');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const urlPrefixInput = document.getElementById('urlPrefixInput');
+        const authTokenInput = document.getElementById('authTokenInput');
+        const tutorialPopup = document.getElementById('tutorialPopup');
+
+        let currentImageIndex = 0;
+        let uploadedImages = [];
+        let extractedTexts = [];
+        let selectedOcrMethod = 'surya';
+
+        function showTutorial() {
+            tutorialPopup.style.display = 'block';
+        }
+
+        function closeTutorial() {
+            tutorialPopup.style.display = 'none';
+        }
+
+        function selectOcrMethod(method) {
+            selectedOcrMethod = method;
+            [suryaBtn, paddleBtn].forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            if (method === 'surya') {
+                suryaBtn.classList.add('active');
+            } else {
+                paddleBtn.classList.add('active');
+            }
+        }
+
+        document.getElementById('suryaBtn').addEventListener('click', () => selectOcrMethod('surya'));
+        document.getElementById('paddleBtn').addEventListener('click', () => selectOcrMethod('paddle'));
+        selectOcrMethod('surya');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', () => {
+            handleFiles(fileInput.files);
+        });
+
+        function handleFiles(files) {
+            uploadedImages = Array.from(files);
+            currentImageIndex = 0;
+            extractedTexts = new Array(uploadedImages.length).fill('');
+            updateImagePreview();
+            updateSliderControls();
+        }
+
+        function updateImagePreview() {
+            if (uploadedImages.length > 0) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(uploadedImages[currentImageIndex]);
+                imagePreview.innerHTML = '';
+                imagePreview.appendChild(img);
+            }
+        }
+
+        function updateSliderControls() {
+            prevBtn.disabled = currentImageIndex === 0;
+            nextBtn.disabled = currentImageIndex === uploadedImages.length - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                updateImagePreview();
+                updateSliderControls();
+                updateTextPreview();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentImageIndex < uploadedImages.length - 1) {
+                currentImageIndex++;
+                updateImagePreview();
+                updateSliderControls();
+                updateTextPreview();
+            }
+        });
+
+        enhanceBtn.addEventListener('click', () => {
+            glassmorphism.classList.add('active');
+            setTimeout(() => {
+                extractedTexts[currentImageIndex] = 'Enhanced text result for image ' + (currentImageIndex + 1);
+                updateTextPreview();
+                glassmorphism.classList.remove('active');
+            }, 2000);
+        });
+
+        submitBtn.addEventListener('click', async () => {
+            glassmorphism.classList.add('active');
+            try {
+                const formData = new FormData();
+                const imageFile = uploadedImages[currentImageIndex];
+                const urlPrefix = urlPrefixInput.value || 'http://localhost:8000';
+                const authToken = authTokenInput.value.trim();
+
+                if (imageFile) {
+                    formData.append('file', imageFile);
+                    console.log(imageFile);
+
+                    let fetchUrl = '';
+                    switch (selectedOcrMethod) {
+                        case 'surya':
+                            fetchUrl = `${urlPrefix}/api/v1/surya-ocr/inference`;
+                            break;
+                        case 'paddle':
+                            fetchUrl = `${urlPrefix}/api/v1/paddle-ocr/ocr`;
+                            break;
+                        default:
+                            fetchUrl = `${urlPrefix}/api/v1/paddle-ocr/ocr`;
+                    }
+
+                    const response = await fetch(fetchUrl, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`,
+                            "accept": "application/json"
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Error during text extraction');
+                    }
+
+                    const result = await response.json();
+                    const extractedText = result.rec_text || 'No text extracted';
+                    extractedTexts[currentImageIndex] = extractedText;
+
+                    // alert('Text extracted successfully!');
+                    updateTextPreview();
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                glassmorphism.classList.remove('active');
+            }
+        });
+
+        function updateTextPreview() {
+            textPreview.innerText = extractedTexts[currentImageIndex];
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+services:
+  ocr-app:
+    build : .
+    image: ocr:latest
+    volumes:
+      - .:/app/
+    ports:
+      - "8000:8000"
+
+
+
