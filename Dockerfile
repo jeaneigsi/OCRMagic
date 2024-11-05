@@ -11,9 +11,9 @@ RUN apt-get update && \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    ffmpeg # && \
+    # apt-get clean && \
+    # rm -rf /var/lib/apt/lists/*
 
 # Copy all files from current directory to /app
 COPY . .
