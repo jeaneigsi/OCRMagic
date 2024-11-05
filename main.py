@@ -33,7 +33,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # router = APIRouter()
 
-folder_path = Path("./ouput")
+# folder_path = Path("./ouput")
 
 
 templates = Jinja2Templates(directory="templates")
@@ -59,14 +59,14 @@ async def home(request : Request):
 
 
 
-@app.on_event("startup")
-@repeat_every(seconds=10)  # Adjust as needed
-async def monitor_folder():
-    files = list(folder_path.glob("*"))  # List all files in the folder
-    if len(files) > 2:  # Check if there are more than 2 files
-        for file in files:
-            file.unlink()  # Delete each file
-            print(f"Deleted file: {file.name}")
+# @app.on_event("startup")
+# @repeat_every(seconds=10)  # Adjust as needed
+# async def monitor_folder():
+#     files = list(folder_path.glob("*"))  # List all files in the folder
+#     if len(files) > 2:  # Check if there are more than 2 files
+#         for file in files:
+#             file.unlink()  # Delete each file
+#             print(f"Deleted file: {file.name}")
 
-async def startup_event():
+# async def startup_event():
     await monitor_folder()
