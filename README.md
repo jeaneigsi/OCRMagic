@@ -10,7 +10,7 @@ This repository serves as a modular base for OCR tasks. Feel free to improve it 
 ├── input/
 └── models/        # Add your new models here
 ```
-
+At first load, app download models weights, so wait a bit before to  ready. *Use paddle for speed and surya for accuracy*
 
 ## API Endpoints
 

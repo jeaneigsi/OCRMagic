@@ -4,14 +4,16 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install system dependencies using apt
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     build-essential \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    ffmpeg 
-   
+    ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy all files from current directory to /app
 COPY . .
@@ -24,6 +26,10 @@ RUN python -m pip install --upgrade pip \
 
 # Expose port 8000
 EXPOSE 8000
+
+# Create a non-root user and switch to it
+RUN useradd -m myuser
+USER myuser
 
 # Start the FastAPI application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
