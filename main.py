@@ -69,4 +69,4 @@ async def home(request : Request):
 #             print(f"Deleted file: {file.name}")
 
 # async def startup_event():
-    await monitor_folder()
+#     await monitor_folder()
