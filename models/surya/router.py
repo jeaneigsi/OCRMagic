@@ -22,6 +22,9 @@ from surya.settings import settings
 import torch
 import gc
 
+
+det_model, det_processor = load_det_model(dtype=torch.float16), load_det_processor()
+rec_model, rec_processor = load_rec_model(dtype=torch.float16), load_rec_processor()
 # Supported languages for OCR
 langs = ["fr", "en"]  # Customize based on required OCR languages
 
@@ -52,8 +55,7 @@ async def inference(file: UploadFile = File(...)):
         doc = reduce_image_size(doc, reduction_factor=0.7)
 
         # Load OCR detection and recognition models
-        det_model, det_processor = load_det_model(dtype=torch.float16), load_det_processor()
-        rec_model, rec_processor = load_rec_model(dtype=torch.float16), load_rec_processor()
+  
 
         # Run the OCR pipeline on the processed image
         predictions = run_ocr([doc], [langs], det_model, det_processor, rec_model, rec_processor)

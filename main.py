@@ -24,7 +24,7 @@ from fastapi_utils.tasks import repeat_every
 load_dotenv()
 
 # Parse ALLOWED_ORIGINS from environment variable
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+# allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
 
 
 
@@ -41,7 +41,7 @@ templates = Jinja2Templates(directory="templates")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,      # Use parsed list from environment
+    allow_origins=["*"],      # Use parsed list from environment
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],  # Adjust as needed
     allow_headers=["Content-Type", "Authorization"],
