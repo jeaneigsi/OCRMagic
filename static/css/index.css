@@ -1,3 +1,30 @@
+.ocr-method-btn {
+  margin: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.ocr-method-btn.active {
+  background-color: #4CAF50;
+  color: white;
+}
+/* Style for the tutorial popup */
+.tutorial-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.tutorial-popup button {
+  margin-top: 10px;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #6e8efb, #a777e3);
