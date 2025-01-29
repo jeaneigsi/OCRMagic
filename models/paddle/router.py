@@ -23,7 +23,46 @@ pipeline = create_pipeline(pipeline="OCR", device="cpu")
 router = APIRouter()
 
 # Endpoint for single image OCR processing
-@router.post("/ocr", dependencies=[Depends(JWTBearer())])
+@router.post("/ocr")
+async def ocr_pipeline(file: UploadFile = File(...)):
+    # Set up the OCR pipeline with specified device
+    
+    
+    try:
+        # Read and process the uploaded image
+        img_bytes = await file.read()
+        name, _ = os.path.splitext(file.filename)
+        print(f"Received file: {file.filename}, size: {len(img_bytes)} bytes")
+        
+        # Convert to PIL image and resize to optimize processing
+        # img = Image.open(io.BytesIO(img_bytes))
+        img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+
+        img = reduce_image_size(img, reduction_factor=0.7)
+        image_np = pil_to_np(img)
+       
+
+        # Perform OCR prediction
+        output = pipeline.predict(image_np)
+        
+        # Collect and store OCR results in JSON format
+        for res in output:
+            res.print()
+            res.save_to_json(f"./output/{name}.json")
+            with open(f"./output/{name}.json", 'r') as doc:
+                data = json.load(doc)
+               
+
+        # Free up memory by unloading the pipeline
+        unload(pipeline)
+
+        return JSONResponse(content=data)
+
+    except Exception as e:
+        # Return error details in case of failure
+        raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
+
+@router.post("/ocr_secure", dependencies=[Depends(JWTBearer())])
 async def ocr_pipeline(file: UploadFile = File(...)):
     # Set up the OCR pipeline with specified device
     

@@ -1,47 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCR Magic: Extract Text from Images</title>
+    <title>OCR MAGIC</title>
     <link rel="stylesheet" href="../static/css/index.css">
->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-
-        <h1>OCR Magic</h1>
-        <button onclick="showTutorial()">Show Tutorial</button>
-        <div class="ocr-method-selector">
-            <button class="ocr-method-btn" id="suryaBtn">Surya</button>
-            <button class="ocr-method-btn" id="paddleBtn">Paddle</button>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="logo-links">
+                <a href="/" class="logo">OCR MAGIC</a>
+                <nav>
+                    <a href="/" class="nav-link-only-image-to-text"></a>
+                </nav>
+            </div>
+            <!-- <div class="right-bar">
+                <a href="#" class="login-button">
+                    <i class="fas fa-user"></i>
+                    Login
+                </a>
+            </div> -->
         </div>
-        <div class="url-prefix">
-            <label for="urlPrefixInput">Enter URL Prefix:</label>
-            <input type="text" id="urlPrefixInput" placeholder="http://localhost:8000" />
-        </div>
-        <div class="token-auth">
-            <label for="authTokenInput">Enter Bearer Token:</label>
-            <input type="text" id="authTokenInput" placeholder="Bearer Token" />
-        </div>
-        <div class="upload-area" id="uploadArea">
-            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
-            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Upload Images</button>
-            <p>or drag and drop images here</p>
-        </div>
-        <div class="preview-area">
-            <div class="image-preview" id="imagePreview"></div>
-            <div class="text-preview" id="textPreview"></div>
-        </div>
-        <div class="slider-controls">
-            <button class="slider-btn" id="prevBtn" disabled>&lt;</button>
-            <button class="slider-btn" id="nextBtn" disabled>&gt;</button>
-        </div>
-        <div class="controls">
-            <button class="submit-btn" id="submitBtn">Extract Text</button>
-            <button class="enhance-btn" id="enhanceBtn">Enhance Results</button>
+        <div class="top-banner">
+            <div class="container">
+                <div class="banner-text">
+                    LIFETIME <br>
+                    SUBSCRIPTION
+                </div>
+                <div class="banner-text">
+                    +30<br>
+                    DAYS
+                </div>
+                <div class="banner-text">
+                    +15<br>
+                    IMAGES
+                </div>
+                <div class="banner-text banner-price">
+                    GET OFFER ONLY IN <span style="font-weight: bolder;">$4.99</span>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Main Content -->
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Image to Text Converter</h1>
+                <p>An efficient tool to extract text from images online.</p>
+                
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <i class="fas fa-image upload-icon"></i>
+                        <p>Drop, Upload or Paste image</p>
+                        <p class="small-text">Supported formats: JPG, PNG, GIF, JFIF, (JPEG), HEIC, PDF</p>
+                        <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                        <div class="button-group">
+                            <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-upload"></i> Browse
+                            </button>
+                            <!--  
+                            <button class="clipboard-btn">
+                                <i class="fas fa-link"></i>
+                            </button>
+
+                            -->
+                        </div>
+                        <p class="privacy-text">*Your privacy is protected! No data is transmitted or stored.</p>
+                    </div>
+                    
+                    <div class="file-list" id="fileList">
+                        <!-- File items will be added here dynamically -->
+                    </div>
+                    
+                    <div class="upload-controls" id="uploadControls" style="display:none">
+                        <button class="clear-all-btn" id="clearAllBtn">
+                            <i class="fas fa-trash"></i> Clear All
+                        </button>
+                        <button class="convert-btn" id="convertBtn">
+                            <i class="fas fa-magic"></i> Convert
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Area -->
+                <div class="result-area" id="resultArea" style="display:none;">
+                    <div class="container">
+                        <div class="result-header">
+                            <h2 class="result-title">Results <span id="fileCount"></span></h2>
+                            <div class="result-action">
+                                <button class="get-api-btn">
+                                    <i class="fas fa-code"></i> Get API
+                                </button>
+                                <button class="start-over-btn" id="startOverBtn">
+                                    <i class="fas fa-redo"></i> Start Over
+                                </button>
+                                <button class="download-all-btn" id="downloadAllBtn">
+                                    <i class="fas fa-download"></i> Download All
+                                </button>
+                            </div>
+                        </div>
+                        
+                         <div class="result-list" id="resultList">
+                            <!-- Result items will be added here dynamically -->
+                          <!-- Example of one result item structure. It is for demonstration purposed only and will be deleted when result is generated-->
+                         </div>
+
+                        <!-- Pagination -->
+                        <div class="pagination">
+                            <button class="prev-next" id="prevPage" disabled>
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <div class="page-numbers" id="pageNumbers">
+                                <!-- Page numbers will be added dynamically -->
+                            </div>
+                            <button class="prev-next" id="nextPage">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                        </div>
+                    </div>
+                </div>
+                 <div class="text-modal" id="textModal" style="display:none;">
+                    <button class="close-button" id="closeModal">
+                         <i class="fas fa-times"></i>
+                     </button>
+                    <div class="text-content" id="textModalContent"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Overlay -->
     <div class="glassmorphism" id="glassmorphism">
         <div class="spinner"></div>
     </div>
@@ -49,180 +143,14 @@
     <!-- Tutorial Popup -->
     <div class="tutorial-popup" id="tutorialPopup" style="display:none;">
         <h2>Tutorial</h2>
-        <p>1. Enter the URL prefix (don't add "/" at the end ) and Bearer token in the appropriate fields.</p>
-        <p>2. Click "Upload Images" to select images or drag and drop images into the designated area.</p>
-        <p>3. Select the OCR method you want to use (Surya for quality or Paddle for speed).</p>
-        <p>4. Click "Extract Text" to extract text from the uploaded image.</p>
-        <p>5. View the extracted text below the image preview.</p>
-        <button onclick="closeTutorial()">Close</button>
+        <p>1. Drop your images or click Browse to select files</p>
+        <p>2. Select multiple images at once for batch processing</p>
+        <p>3. Click Convert to extract text from all images</p>
+        <p>4. View results and download text as needed</p>
+        <button onclick="closeTutorial()">Got it!</button>
     </div>
 
-    <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const textPreview = document.getElementById('textPreview');
-        const submitBtn = document.getElementById('submitBtn');
-        const enhanceBtn = document.getElementById('enhanceBtn');
-        const glassmorphism = document.getElementById('glassmorphism');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const urlPrefixInput = document.getElementById('urlPrefixInput');
-        const authTokenInput = document.getElementById('authTokenInput');
-        const tutorialPopup = document.getElementById('tutorialPopup');
-
-        let currentImageIndex = 0;
-        let uploadedImages = [];
-        let extractedTexts = [];
-        let selectedOcrMethod = 'surya';
-
-        function showTutorial() {
-            tutorialPopup.style.display = 'block';
-        }
-
-        function closeTutorial() {
-            tutorialPopup.style.display = 'none';
-        }
-
-        function selectOcrMethod(method) {
-            selectedOcrMethod = method;
-            [suryaBtn, paddleBtn].forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            if (method === 'surya') {
-                suryaBtn.classList.add('active');
-            } else {
-                paddleBtn.classList.add('active');
-            }
-        }
-
-        document.getElementById('suryaBtn').addEventListener('click', () => selectOcrMethod('surya'));
-        document.getElementById('paddleBtn').addEventListener('click', () => selectOcrMethod('paddle'));
-        selectOcrMethod('surya');
-
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-            handleFiles(e.dataTransfer.files);
-        });
-
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
-
-        function handleFiles(files) {
-            uploadedImages = Array.from(files);
-            currentImageIndex = 0;
-            extractedTexts = new Array(uploadedImages.length).fill('');
-            updateImagePreview();
-            updateSliderControls();
-        }
-
-        function updateImagePreview() {
-            if (uploadedImages.length > 0) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(uploadedImages[currentImageIndex]);
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            }
-        }
-
-        function updateSliderControls() {
-            prevBtn.disabled = currentImageIndex === 0;
-            nextBtn.disabled = currentImageIndex === uploadedImages.length - 1;
-        }
-
-        prevBtn.addEventListener('click', () => {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
-                updateImagePreview();
-                updateSliderControls();
-                updateTextPreview();
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            if (currentImageIndex < uploadedImages.length - 1) {
-                currentImageIndex++;
-                updateImagePreview();
-                updateSliderControls();
-                updateTextPreview();
-            }
-        });
-
-        enhanceBtn.addEventListener('click', () => {
-            glassmorphism.classList.add('active');
-            setTimeout(() => {
-                extractedTexts[currentImageIndex] = 'Enhanced text result for image ' + (currentImageIndex + 1);
-                updateTextPreview();
-                glassmorphism.classList.remove('active');
-            }, 2000);
-        });
-
-        submitBtn.addEventListener('click', async () => {
-            glassmorphism.classList.add('active');
-            try {
-                const formData = new FormData();
-                const imageFile = uploadedImages[currentImageIndex];
-                const urlPrefix = urlPrefixInput.value || 'http://localhost:8000';
-                const authToken = authTokenInput.value.trim();
-
-                if (imageFile) {
-                    formData.append('file', imageFile);
-                    console.log(imageFile);
-
-                    let fetchUrl = '';
-                    switch (selectedOcrMethod) {
-                        case 'surya':
-                            fetchUrl = `${urlPrefix}/api/v1/surya-ocr/inference`;
-                            break;
-                        case 'paddle':
-                            fetchUrl = `${urlPrefix}/api/v1/paddle-ocr/ocr`;
-                            break;
-                        default:
-                            fetchUrl = `${urlPrefix}/api/v1/paddle-ocr/ocr`;
-                    }
-
-                    const response = await fetch(fetchUrl, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Authorization': `Bearer ${authToken}`,
-                            "accept": "application/json"
-                        }
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Error during text extraction');
-                    }
-
-                    const result = await response.json();
-                    const extractedText = result.rec_text || 'No text extracted';
-                    extractedTexts[currentImageIndex] = extractedText;
-
-                    // alert('Text extracted successfully!');
-                    updateTextPreview();
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-            } finally {
-                glassmorphism.classList.remove('active');
-            }
-        });
-
-        function updateTextPreview() {
-            textPreview.innerText = extractedTexts[currentImageIndex];
-        }
-    </script>
+    <!-- JavaScript -->
+    <script src="../static/js/script.js"></script>
 </body>
 </html>

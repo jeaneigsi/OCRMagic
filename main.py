@@ -57,6 +57,10 @@ app.include_router(secure_router, prefix="/api/v1/secure-ocr", tags=["O2th"])
 async def home(request : Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/pricing")
+async def home(request : Request):
+    return templates.TemplateResponse("pricing.html", {"request": request})
+
 
 
 @app.on_event("startup")

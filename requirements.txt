@@ -16,3 +16,4 @@ supabase
 pydantic[email]
 fastapi-utils
 python-multipart
+together
